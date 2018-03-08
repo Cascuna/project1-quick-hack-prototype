@@ -16,19 +16,27 @@
 	
 </head>
 <body>
-
+	
 
 <main>
-	<div id="maincontainer">
 		
-			<h1>Amsterdam, gebouwen WIP titel</h1>
+	<div id="maincontainer">
+			
+		<h1>Amsterdam, gebouwen WIP titel</h1>
 		<div id="mapid"></div>
-	<div class="slidecontainer">
-			<input type="range" min="1400" max="2020" value="2000" class="slider" step='10' id="yearRange">
-		</div>
-		<div id='currentYear'>
-		</div>
-		<button type="button" id='timeTravelButton'>Zie de bouw van Amsterdam door de jaren heen</button>
+		<div id='controlpanel'>
+			<div class="control play" id="timeTravelButton">
+				<span class="left"></span><span class="right"></span>
+			</div>
+			<div class="slidecontainer">
+				<input type="range" min="1400" max="2020" value="2000" class="slider" step='10' id="yearRange">
+			</div>
+			<div id='currentYear'>
+			</div>
+		</div>	
+
+	
+		<!-- <button type="button" id='timeTravelButton'>Zie de bouw van Amsterdam door de jaren heen</button> -->
 	</div>
 	<div id='imgcontainer'> Nog geen beeldmateriaal geladen! Klik op een groene marker om beeldmateriaal van het gebouw te laden </div>
 	

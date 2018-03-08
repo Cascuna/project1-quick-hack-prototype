@@ -2,6 +2,7 @@
 	let allBuildingTypes = {}
 	let buildingUriLink = {}
 	let clickedChurch = {}
+	let intr = false
 	let churches = []
 	var slider = document.getElementById("yearRange")
 	var output = document.getElementById("currentYear")
@@ -321,11 +322,15 @@
 		
 	// }, 50);
 	button.onclick = function() {
-		console.log(slider.value)
+
 		slider.value = slider.min
 		let incrementer = slider.min
 		output.innerHTML = slider.value
-		let intr = setInterval(function(){
+		if(intr){
+			clearInterval(intr)
+			return
+		}
+		 intr = setInterval(function(){
 			slider.value = incrementer++
 			featuregroup.clearLayers()
 			churches.filter((church)=> {
@@ -342,6 +347,7 @@
 			output.innerHTML = slider.value
 			if(slider.value === slider.max){
 				clearInterval(intr)
+				intr = false
 			}
 		}, 50)
 
@@ -371,6 +377,19 @@
 				
 			}
 		})
+	} 
 
-} 
+
+	button.onmousedown = function() {
+		button.classList.toggle('pause')
+		button.classList.toggle('play')
+	}
+
+	button.onkeyup = function(e) {
+		if (e.which === 32) {
+			button.toggle('pause')
+			button.toggle('play')
+		}
+	}
+
 }
