@@ -340,7 +340,7 @@
 					bindPopup(generatePopup(church))
 					.addTo(featuregroup)
 					.on('click', onClick)	
-					}catch{}
+					}catch(e){}
 					
 				}
 			})
@@ -374,7 +374,7 @@
 				bindPopup(generatePopup(church))
 				.addTo(featuregroup)
 				.on('click', onClick)	
-				}catch{}
+				}catch(e){}
 				
 			}
 		})
