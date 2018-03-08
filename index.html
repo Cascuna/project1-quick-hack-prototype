@@ -2,53 +2,49 @@
 <html>
 <head>
 
-	<title>Adamlink SPARQLen met javascript</title>
+	<title>Amsterdam van toen</title>
 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://fonts.googleapis.com/css?family=Nunito:700" rel="stylesheet">
 	
-	<style type="text/css">
-		body{
-			padding: 40px;
-			text-align: center;
-		}
-		h1{
-			font-family: "Nunito";
-		}
-		img{
-			height: 200px;
-			margin-right: 20px;
-			margin-bottom: 20px;
-			/* border:5px solid #000; */
-		}
-		#mapid{
-			height: 500px;
-
-		}
-	</style>
-		
-
+	<link rel="stylesheet" type="text/css" media="screen" href="static/css/style.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"/>
+	<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">	
+	<link rel="stylesheet" href="http://watson.lennardvoogdt.nl/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.2/rangeslider.css" />
 	
 </head>
 <body>
 
-<h1>Fetch and show results from Adamlink SPARQL endpoint with js</h1>
-<div id="mapid"></div>
-<div id="images"></div>
-<script src="https://unpkg.com/terraformer@1.0.8"></script>
-<script src="https://unpkg.com/terraformer-arcgis-parser@1.0.5"></script>
-<script src="https://unpkg.com/terraformer-wkt-parser@1.1.2"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"/>
-<script src="https://raw.githubusercontent.com/mapbox/wellknown/master/wellknown.js"></script>
-<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
-<script src="static/js/leaflet-providers.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.2/wicket.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.2/wicket-leaflet.js"></script>
+
+<main>
+	<div id="maincontainer">
+		
+			<h1>Amsterdam, gebouwen WIP titel</h1>
+		<div id="mapid"></div>
+	<div class="slidecontainer">
+			<input type="range" min="1400" max="2020" value="2000" class="slider" step='10' id="yearRange">
+		</div>
+		<div id='currentYear'>
+		</div>
+		<button type="button" id='timeTravelButton'>Zie de bouw van Amsterdam door de jaren heen</button>
+	</div>
+	<div id='imgcontainer'> Nog geen beeldmateriaal geladen! Klik op een groene marker om beeldmateriaal van het gebouw te laden </div>
+	
+</main>
 
 
-
-<script src="static/js/script.js"></script>
-
+ 
+  
+  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"
+  integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
+  crossorigin=""></script>
+  <script src="http://watson.lennardvoogdt.nl/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
+  <script src="static/js/leaflet-providers.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.2/wicket.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wicket/1.3.2/wicket-leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.2/rangeslider.js"></script>
+  <script src="static/js/script.js"></script>
 </body>
 </html>
