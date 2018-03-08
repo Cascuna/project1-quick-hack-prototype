@@ -55,7 +55,7 @@
 				newImg.src = img.depiction.value
 				container.appendChild(newImg)
 			}
-		}catch(e) {
+		}catch {
 			container.innerHTML = "Dit gebouw heeft geen beeldmateriaal beschikbaar!"
 		}
 	}
@@ -174,7 +174,7 @@
 			try {
 				datestring = object.earliestBegin.value
 			}
-			catch(e) {
+			catch {
 				datestring = 'geen begin datum'
 			}
 		return popupText = `${object.label.value} ${datestring}`
@@ -226,7 +226,6 @@
 			return newBinding
 		}
 	)
-	///sa
 		return churches
 	}).then((churches) => {
 		churches.map((church) => {
@@ -259,7 +258,7 @@
 							.on('click', onClick)
 						}	
 					}
-					catch(e) {console.log('fail')} //_layers.feature.geometry.type
+					catch {console.log('fail')} //_layers.feature.geometry.type
 				
 				}})
 			.catch((error) => console.log(error))
@@ -286,14 +285,14 @@
 		let begin = 0
 		try {
 			end = obj.earliestEnd.value
-		} catch(e){}
+		} catch {}
 		try {
 			begin = obj.earliestBegin.value
-		} catch(e){}
+		} catch {}
 		
 		try{
 		return(obj.earliestBegin.value-year < 10 && obj.earliestBegin.value-year > -1)
-		}catch(e){return false}
+		}catch{return false}
 
 		// return (year >= begin && year <= end) 
 	}
