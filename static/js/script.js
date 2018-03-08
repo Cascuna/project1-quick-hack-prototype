@@ -4,29 +4,16 @@
 	let clickedChurch = {}
 	let intr = false
 	let churches = []
-	var slider = document.getElementById("yearRange")
-	var output = document.getElementById("currentYear")
+	var slider =  document.getElementById("range-slider")
+	// var output = document.getElementById("currentYear")
 	var button = document.getElementById("timeTravelButton")
+	var rangeSlider = document.getElementById("range-slider");
+	var rangeLabel = document.getElementById("range-label");
+	
 
-
-	output.innerHTML = slider.value // Display the default slider value
 	let intialSlider = slider.value
-	L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
+	showSliderValue()
 
-	var redMarker = L.AwesomeMarkers.icon({
-        icon: 'help-buoy',
-        markerColor: 'red'
-    })
-  	
-	var myIcon = L.icon({
-		iconUrl: 'static/images/markers-plain.png',
-		shadowUrl: 'static/images/markers-shadow.png',
-		iconSize: [38, 95],
-		iconAnchor: [22, 94],
-		popupAnchor: [-3, -76],
-		shadowSize: [68, 95],
-		shadowAnchor: [22, 94]
-	});
 
 		
 	const maxLimit = 1000
@@ -38,11 +25,14 @@
 		init: function () {
 			this.map.setView(this.startingViewCoordinates, this.zoom)
 			L.tileLayer.provider('Stamen.Watercolor').addTo(this.map)
+			L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
+			
 			// featuregroup.addTo(mymap)
 		}
 	}
 	primaryMap.init()
-
+	let featuregroup = L.geoJSON()
+	featuregroup.addTo(primaryMap.map)
 
 
 	const sparqlEndpoints = {
@@ -147,9 +137,8 @@
 
 	// Testing with groups to delete it later >:)	
 	
-	let featuregroup = L.geoJSON()
-	featuregroup.addTo(primaryMap.map)
-	console.log(featuregroup.pointToLayer)
+
+	
 
 	console.log(L.AwesomeMarkers.icon({
 		icon: 'help-buoy',
@@ -268,13 +257,7 @@
 							.bindPopup(generatePopup(church))
 							.addTo(featuregroup)
 							.on('click', onClick)
-							
-							// church.geoJson.layer.setIcon(L.AwesomeMarkers.icon({
-							// 	icon: 'help-buoy',
-							// 	markerColor: 'red'
-							// }))	
-						}
-					
+						}	
 					}
 					catch(e) {console.log('fail')} //_layers.feature.geometry.type
 				
@@ -315,18 +298,11 @@
 		// return (year >= begin && year <= end) 
 	}
 	var i = 0;
-	// setInterval(function(){
-	// 	let rangeObj = document.querySelector('input[type=range]')
-	// 	rangeObj.value = rangeObj.value + 10;
-	// 	output.innerHTML = rangeObj.value;
-	// 	// console.log(rangeObj.value)
-		
-	// }, 50);
 	button.onclick = function() {
 
 		slider.value = slider.min
 		let incrementer = slider.min
-		output.innerHTML = slider.value
+		// output.innerHTML = slider.value
 		if(intr){
 			clearInterval(intr)
 			return
@@ -345,7 +321,8 @@
 				}
 			})
 			tooltipYear.updateYear()
-			output.innerHTML = slider.value
+			showSliderValue()
+			// output.innerHTML = slider.value
 			if(slider.value === slider.max){
 				clearInterval(intr)
 				intr = false
@@ -354,19 +331,24 @@
 
 	}
 
-	
+	drawBuildBuildings = function() {
+		featuregroup.clearLayers()
+		churches.filter((church)=> {
+			if(determineActiveBuildings(this.value, church)) {
+				try{church.geoJson.
+				bindPopup(generatePopup(church))
+				.addTo(featuregroup)
+				.on('click', onClick)	
+				}catch{}	
+			}
+		})
+	}
 
 
 
 	slider.oninput = function() {
-		output.innerHTML = this.value
+		// output.innerHTML = this.value
 		tooltipYear.updateYear()
-
-	}
-	// Update the current slider value (each time you drag the slider handle)
-	slider.onmouseup = function() {
-		tooltipYear.updateYear()
-		output.innerHTML = slider.value	
 		featuregroup.clearLayers()
 		churches.filter((church)=> {
 			if(determineActiveBuildings(this.value, church)) {
@@ -378,9 +360,13 @@
 				
 			}
 		})
+
+	}
+	// Update the current slider value (each time you drag the slider handle)
+	slider.onmouseup = function() {
+		tooltipYear.updateYear()
+		// 	output.innerHTML = slider.value	s
 	} 
-
-
 	button.onmousedown = function() {
 		button.classList.toggle('pause')
 		button.classList.toggle('play')
@@ -390,6 +376,24 @@
 		if (e.which === 32) {
 			button.toggle('pause')
 			button.toggle('play')
+		}
+	}
+
+
+
+	rangeSlider.addEventListener("input", showSliderValue, false);
+
+		function showSliderValue() {
+		rangeLabel.innerHTML = rangeSlider.value;
+		var labelPosition = ((rangeSlider.value - rangeSlider.min)*3.19 / (rangeSlider.max));
+		console.log(labelPosition)
+		console.log(rangeLabel.style.left)
+		if(rangeSlider.value === rangeSlider.min) {
+			rangeLabel.style.left = ((labelPosition * 100) + 2) + "%";
+		} else if (rangeSlider.value === rangeSlider.max) {
+			rangeLabel.style.left = ((labelPosition * 100) - 2) + "%";
+		} else {
+			rangeLabel.style.left = (labelPosition * 100) + "%";
 		}
 	}
 
