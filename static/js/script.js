@@ -22,7 +22,23 @@
 		activeMap : L.tileLayer.provider('OpenStreetMap.BlackAndWhite'),
 		zoom: 13, 
 		tooltipLegend: L.control({position: 'bottomright'}),
-		createLegend: function() {
+		tooltipYear: L.control({position:'topright'}), 
+
+		generatYearLegend: function(){
+			this.tooltipYear.onAdd = function (map) {
+				var div = L.DomUtil.create('div', 'info yearindex')
+				div.innerHTML = 
+				`<div> U bevindt zich in het jaar </div> <div id="year"> ${slider.value} </div>`
+				return div
+			}
+			this.tooltipYear.updateYear = function(props) {
+				document.getElementById('year').innerHTML = slider.value
+			}
+
+			this.tooltipYear.addTo(primaryMap.map)
+		},
+
+		generateTooltipLegend: function(){
 			this.tooltipLegend.onAdd = function (map) {
 				console.log('dit')
 				var div = L.DomUtil.create('div', 'info tooltips')
@@ -31,7 +47,12 @@
 				<div class="legenditem"> <div class="awesome-marker-icon-red awesome-marker tooltip"></div><div class="legendtext"> Dit gebouw heeft geen beeldmateriaal</div> </div>`
 				return div;	
 			}
-			this.tooltipLegend.addTo(primaryMap.map)
+			this.tooltipLegend.addTo(primaryMap.map)		
+		},
+		createLegends: function() {
+			this.generateTooltipLegend()
+			this.generatYearLegend()
+		
 		},
 		init: function () {
 			this.map.setView(this.startingViewCoordinates, this.zoom)
@@ -43,8 +64,7 @@
 		
 			L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 			this.activeMap.addTo(this.map)
-			this.createLegend()
-			// featuregroup.addTo(mymap)
+			this.createLegends()
 		}
 	}
 	primaryMap.init()
@@ -63,7 +83,6 @@
 	function onClick(eventObj) {
 
 		clickedChurch = churches.find(church => church.geoJson._leaflet_id === eventObj.target._leaflet_id)
-		// console.log(churches.find(church => church.geoJson._leaflet_id === eventObj.target._leaflet_id))
 		container = document.getElementById("imgcontainer")
 		container.innerHTML = ""
 		try {
@@ -109,71 +128,7 @@
 			return prefix + encodedQuery + suffix
 		}
 	}
-	// const allBuildingTypesQuery = 
-	// `SELECT ?typelink (count(?typelink) as ?count) WHERE {
-	// 		?building rdf:type hg:Building .
-	// 		?building dc:type ?typelink .
-	// 	} group by ?typelink
-	// 	LIMIT ${maxLimit}`
-
-	// sparqlQueryHandler.sendQuery(allBuildingTypesQuery)
-	// .then((data) => {
-	// 	for(let bind of data.results.bindings){
-	// 		sparqlQueryHandler.sendQuery(
-	// 		`
-	// 		select * where {
-	// 			<${bind.typelink.value}> skos:prefLabel ?buildingname 
-	// 				filter (lang(?buildingname) = 'nl')
-	// 		}`, sparqlEndpoints.gettyPrefix, sparqlEndpoints.gettySuffix)
-	// 		.then((data) => {
-	// 			if(data.results.bindings[0] !== undefined){
-	// 				buildingUriLink[bind.typelink.value] = data.results.bindings[0].buildingname.value
-	// 				allBuildingTypes[data.results.bindings[0].buildingname.value] = bind.count.value
-	// 			}else if(bind.count.value > 0){
-	// 				allBuildingTypes['overig'] += bind.count.value
-	// 			}
-	// 		})
-	// 	}
-	// })
-	// .catch((error)=>{
-	// 	console.log(error)
-	// })
-
-	// const objectsWithoutGettyType = `
-	// SELECT (count(?building) as ?buildings) WHERE {
-	// 	?building rdf:type hg:Building .
-	// 	FILTER NOT EXISTS {?building  dc:type ?typelink}
-	// }`
-	// sparqlQueryHandler.sendQuery(objectsWithoutGettyType)
-	// .then((data) => {
-	// 	allBuildingTypes['overig'] += data.results.bindings[0].buildings.value
-	// })
-	// .catch((error) => {
-	// 	console.log(error)
-	// })
-
-	// Testing with groups to delete it later >:)	
 	
-
-	
-
-
-
-	var tooltipYear = L.control({position:'topright'})
-	tooltipYear.onAdd = function (map) {
-		var div = L.DomUtil.create('div', 'info yearindex')
-		div.innerHTML = 
-		`<div> U bevindt zich in het jaar </div> <div id="year"> ${slider.value} </div>`
-		return div
-	}
-	tooltipYear.updateYear = function(props) {
-		document.getElementById('year').innerHTML = slider.value
-	}
-
-	tooltipYear.addTo(primaryMap.map)
-	
-
-
 	function generatePopup(object){
 		let datestring = ''
 			try {
@@ -321,14 +276,15 @@
 				
 			}
 		})
-		tooltipYear.updateYear()
+		primaryMap.tooltipYear.updateYear()
 		showSliderValue()
 	}
+
+	
 
 	button.onclick = function() {
 		let incrementer = slider.value
 		if(intr){
-		
 			clearInterval(intr)
 			intr = false
 			showSliderValue()
