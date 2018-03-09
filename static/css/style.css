@@ -162,7 +162,7 @@ img{
   }
 
   .slider-wrapper {
-    width: 70%;
+    width: 91%;
     display: inline-block;
     margin-top: 2.7em;
     vertical-align: middle;
@@ -299,4 +299,83 @@ img{
 
   .leaflet-control-attribution {
     display:none;
+  }
+
+  #container{
+    position: absolute;
+    height:150px;
+    width:150px;
+    left:40%;
+    z-index: 40000;
+    top: 7em;
+  }
+
+  .hide{
+    display: none;
+  }
+
+  .loader{
+    position:relative;
+   animation: rotate 3s linear infinite;
+  }
+  .circle {
+    stroke-dasharray:1,500;
+    stroke-dashoffset:0;
+    stroke-linecap:round;
+    animation: anim 3s ease-out infinite, color 3s ease-out infinite;
+  }
+
+  .mapbox {
+    position: relative;
+  }
+
+  .inactivemap {
+    filter: grayscale(1);
+  }
+
+
+  
+  @keyframes rotate{
+    0%{
+    transform: rotate(0deg);
+    }
+    25%{
+    transform: rotate(90deg);
+    }
+    50%{
+    transform: rotate(180deg);
+    }
+    75%{
+    transform: rotate(270deg);
+    }
+    100%{
+    transform: rotate(360deg);
+    }
+  }
+  @keyframes anim{
+    0%{
+      stroke-dasharray:1,500;
+      stroke-dashoffset:0;
+    }
+     
+     50%{
+       stroke-dasharray:370,500;
+      stroke-dashoffset:-150px;
+    }
+     100%{
+       stroke-dasharray:370,500;
+      stroke-dashoffset:-480px;
+    }
+  }
+  @keyframes color{
+   100%, 0%{
+      stroke: red;
+    }
+    
+    60%{
+      stroke:green;
+    }
+    80%{
+      stroke:blue;
+    }
   }

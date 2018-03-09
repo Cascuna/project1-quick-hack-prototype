@@ -19,11 +19,19 @@
 	
 
 <main>
-		
-	<div id="maincontainer">
+	
+	<div id="maincontainer"> 
 			
-		<h1>De opbouw van amsterdam</h1>
-		<div id="mapid"></div>
+		<h1>De opbouw van amsterdam</h1> 
+		
+		<div class="mapbox"> 
+			<div id="container">
+					<svg class="loader" viewBox="10 10 200 200">
+						<circle class="circle" cx="110" cy="110" r="80" fill="none" stroke-width="10"  />
+					</svg>
+				</div>
+			<div id="mapid" class="inactivemap"></div>
+		</div>
 		<div id='controlpanel'>
 			<div class="control play" id="timeTravelButton">
 				<span class="left"></span><span class="right"></span>

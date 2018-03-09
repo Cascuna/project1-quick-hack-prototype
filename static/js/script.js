@@ -233,6 +233,8 @@
 	)
 		return churches
 	}).then((churches) => {
+		let churchcounter = 0
+		
 		churches.map((church) => {
 			const buildingImages = `
 			SELECT * WHERE {
@@ -264,22 +266,18 @@
 						}	
 					}
 					catch {console.log('fail')} //_layers.feature.geometry.type
-				
-				}})
+					finally {}
+				}
+				churchcounter++
+				if(churchcounter === churches.length){
+					document.getElementById("container").classList.add("hide")
+					document.getElementById("mapid").classList.remove("inactivemap")
+				}
+			})
 			.catch((error) => console.log(error))
-			// if(church.sameas){
-			// 	let urlArray = church.sameas.value.split('/')
-			// 	if(urlArray.includes('verdwenengebouwen.nl')){
-			// 		urlArray.splice((urlArray.length - 1), 0, "json")
-			// 		let jsonUrl = urlArray.join('/')
-			// 		fetch("http://verdwenengebouwen.nl/gebouw/json/3569")
-			// 		.then((data) => {console.log(data)})
-			// 		// fetch(jsonUrl).then((data) => {console.log(data)})
-			// 		// console.log(jsonUrl)
-
-			// 	}
-			// }
+			
 		})
+		
 	})
 
 
