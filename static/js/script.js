@@ -4,29 +4,46 @@
 	let clickedChurch = {}
 	let intr = false
 	let churches = []
-	var slider =  document.getElementById("range-slider")
-	// var output = document.getElementById("currentYear")
-	var button = document.getElementById("timeTravelButton")
-	var rangeSlider = document.getElementById("range-slider");
-	var rangeLabel = document.getElementById("range-label");
+	let slider =  document.getElementById("range-slider")
+	const button = document.getElementById("timeTravelButton")
+	let rangeSlider = document.getElementById("range-slider")
+	let rangeLabel = document.getElementById("range-label")
+	const maxLimit = 1000
 	
-
 	let intialSlider = slider.value
 	showSliderValue()
 
+	let tooltipLegend = L.control({position: 'bottomright'})
 
-		
-	const maxLimit = 1000
 	const primaryMap = {
 		map: L.map('mapid'),
 		// Even though it's a singleton, knowing what the variables do lowers the reading diffuclty
 		startingViewCoordinates: [52.3667, 4.9000],
+		activeMap : L.tileLayer.provider('OpenStreetMap.BlackAndWhite'),
 		zoom: 13, 
+		tooltipLegend: L.control({position: 'bottomright'}),
+		createLegend: function() {
+			this.tooltipLegend.onAdd = function (map) {
+				console.log('dit')
+				var div = L.DomUtil.create('div', 'info tooltips')
+				div.innerHTML = 
+				`<div class="legenditem"> <div class="awesome-marker-icon-green awesome-marker tooltip"></div><div class="legendtext"> Dit gebouw heeft beeldmateriaal</div></div>
+				<div class="legenditem"> <div class="awesome-marker-icon-red awesome-marker tooltip"></div><div class="legendtext"> Dit gebouw heeft geen beeldmateriaal</div> </div>`
+				return div;	
+			}
+			this.tooltipLegend.addTo(primaryMap.map)
+		},
 		init: function () {
 			this.map.setView(this.startingViewCoordinates, this.zoom)
-			L.tileLayer.provider('Stamen.Watercolor').addTo(this.map)
+
+			if(slider.value > 1699){
+				console.log(slider.value)
+				this.activeMap = L.tileLayer.provider('OpenStreetMap.HOT')
+			}
+		
 			L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
-			
+			this.activeMap.addTo(this.map)
+			this.createLegend()
 			// featuregroup.addTo(mymap)
 		}
 	}
@@ -140,19 +157,7 @@
 
 	
 
-	console.log(L.AwesomeMarkers.icon({
-		icon: 'help-buoy',
-		markerColor: 'green'
-	}))
-	var tooltipLegend = L.control({position: 'bottomright'})
-	tooltipLegend.onAdd = function (map) {
-		var div = L.DomUtil.create('div', 'info tooltips')
-		div.innerHTML = 
-		`<div class="legenditem"> <div class="awesome-marker-icon-green awesome-marker tooltip"></div><div> Dit gebouw heeft beeldmateriaal</div></div> <br/>
-		<div class="legenditem"> <div class="awesome-marker-icon-red awesome-marker tooltip"></div><div> Dit gebouw heeft geen beeldmateriaal</div> </div>`
-		return div;	
-	}
-	tooltipLegend.addTo(primaryMap.map)
+
 
 	var tooltipYear = L.control({position:'topright'})
 	tooltipYear.onAdd = function (map) {
@@ -293,64 +298,23 @@
 		try{
 		return(obj.earliestBegin.value-year < 10 && obj.earliestBegin.value-year > -1)
 		}catch{return false}
-
-		// return (year >= begin && year <= end) 
 	}
-	var i = 0;
-	button.onclick = function() {
 
-		slider.value = slider.min
-		let incrementer = slider.min
-		// output.innerHTML = slider.value
-		if(intr){
-			clearInterval(intr)
-			return
+	loadBuildings = function() {
+		let mapOf1700 = L.tileLayer.provider('OpenStreetMap.HOT')
+		let mapOf1400 = L.tileLayer.provider('OpenStreetMap.BlackAndWhite')
+		
+		if(slider.value > 1650 && primaryMap.activeMap._url !== mapOf1700._url ){
+			primaryMap.activeMap = mapOf1700
+			primaryMap.activeMap.addTo(primaryMap.map)
 		}
-		 intr = setInterval(function(){
-			slider.value = incrementer++
-			featuregroup.clearLayers()
-			churches.filter((church)=> {
-				if(determineActiveBuildings(slider.value, church)) {
-					try{church.geoJson.
-					bindPopup(generatePopup(church))
-					.addTo(featuregroup)
-					.on('click', onClick)	
-					}catch{}
-					
-				}
-			})
-			tooltipYear.updateYear()
-			showSliderValue()
-			// output.innerHTML = slider.value
-			if(slider.value === slider.max){
-				clearInterval(intr)
-				intr = false
-			}
-		}, 50)
-
-	}
-
-	drawBuildBuildings = function() {
+		if(slider.value < 1651 && primaryMap.activeMap._url !== mapOf1400._url ){
+			primaryMap.activeMap = mapOf1400
+			primaryMap.activeMap.addTo(primaryMap.map)
+		}
 		featuregroup.clearLayers()
 		churches.filter((church)=> {
-			if(determineActiveBuildings(this.value, church)) {
-				try{church.geoJson.
-				bindPopup(generatePopup(church))
-				.addTo(featuregroup)
-				.on('click', onClick)	
-				}catch{}	
-			}
-		})
-	}
-
-
-
-	slider.oninput = function() {
-		// output.innerHTML = this.value
-		tooltipYear.updateYear()
-		featuregroup.clearLayers()
-		churches.filter((church)=> {
-			if(determineActiveBuildings(this.value, church)) {
+			if(determineActiveBuildings(slider.value, church)) {
 				try{church.geoJson.
 				bindPopup(generatePopup(church))
 				.addTo(featuregroup)
@@ -359,13 +323,33 @@
 				
 			}
 		})
-
-	}
-	// Update the current slider value (each time you drag the slider handle)
-	slider.onmouseup = function() {
 		tooltipYear.updateYear()
-		// 	output.innerHTML = slider.value	s
-	} 
+		showSliderValue()
+	}
+
+	button.onclick = function() {
+		let incrementer = slider.value
+		if(intr){
+		
+			clearInterval(intr)
+			intr = false
+			showSliderValue()
+			return
+		}
+		 intr = setInterval(() => {
+			slider.value = incrementer++
+			loadBuildings()
+			if(slider.value === slider.max){
+				clearInterval(intr)
+				intr = false
+			}
+		}, 50)
+	}
+	
+	slider.oninput = ()=> {
+		loadBuildings()
+	}
+	
 	button.onmousedown = function() {
 		button.classList.toggle('pause')
 		button.classList.toggle('play')
@@ -384,7 +368,7 @@
 
 		function showSliderValue() {
 		rangeLabel.innerHTML = rangeSlider.value;
-		var labelPosition = ((rangeSlider.value - rangeSlider.min)*3.19 / (rangeSlider.max));
+		var labelPosition = ((rangeSlider.value - rangeSlider.min)*3.30 / (rangeSlider.max));
 		console.log(labelPosition)
 		console.log(rangeLabel.style.left)
 		if(rangeSlider.value === rangeSlider.min) {
