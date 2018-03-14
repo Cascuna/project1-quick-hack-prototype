@@ -91,7 +91,7 @@
 				newImg.src = img.depiction.value
 				container.appendChild(newImg)
 			}
-		}catch {
+		}catch(e) {
 			container.innerHTML = "Dit gebouw heeft geen beeldmateriaal beschikbaar!"
 		}
 	}
@@ -134,7 +134,7 @@
 			try {
 				datestring = object.earliestBegin.value
 			}
-			catch {
+			catch(e) {
 				datestring = 'geen begin datum'
 			}
 		return popupText = `${object.label.value} ${datestring}`
@@ -220,7 +220,7 @@
 							.on('click', onClick)
 						}	
 					}
-					catch {console.log('fail')} //_layers.feature.geometry.type
+					catch(e) {console.log('fail')} //_layers.feature.geometry.type
 					finally {}
 				}
 				churchcounter++
@@ -243,14 +243,14 @@
 		let begin = 0
 		try {
 			end = obj.earliestEnd.value
-		} catch {}
+		} catch(e) {}
 		try {
 			begin = obj.earliestBegin.value
-		} catch {}
+		} catch(e) {}
 		
 		try{
 		return(obj.earliestBegin.value-year < 10 && obj.earliestBegin.value-year > -1)
-		}catch{return false}
+		}catch(e){return false}
 	}
 
 	loadBuildings = function() {
@@ -272,7 +272,7 @@
 				bindPopup(generatePopup(church))
 				.addTo(featuregroup)
 				.on('click', onClick)	
-				}catch{}
+				}catch(e){}
 				
 			}
 		})
